@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Random kitteh of the now</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<style type="text/css">
+body {
+    background-image: url('bg.png');
+    color: gray;
+}
+h1 {
+    text-align: center;
+    color: white;
+    text-shadow: white 0px 0px 25px;
+}
+.warning {
+    text-align: center;
+    color:red;
+    text-shadow: red 0px 0px 25px;
+}
+#footer {
+    color: black;
+    font-size:0.75em;
+    text-align: center;
+    position: fixed;
+    bottom: 5px;
+    text-shadow: white 0px 0px 5px;
+}
+#infobox {
+    background: black;
+    border: 5px black;
+    border-radius: 15px;
+    -moz-border-radius: 15px;
+    padding: 15px;
+    width: 300px;
+    font-style: italic;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+a {
+    color: white;
+}
+b {
+    color: white;
+}
+#image {
+    background: black;
+    display:block;
+    margin-left: auto;
+    margin-right: auto;
+    border: 15px black solid;
+    border-radius: 15px;
+    -moz-border-radius: 15px;
+    -moz-box-shadow: 0px 0px 25px black; /* Firefox */
+    -webkit-box-shadow: 0px 0px 25px black; /* Safari/Chrome */
+    box-shadow: 0px 0px 25px black; /* Opera and other CSS3 supporting browsers */
+}
+#ngingxlogo {
+    border:0px;
+    position:fixed;
+    bottom:15px;
+    right:15px;
+}
+
+
+</style>
+<script type="text/javascript">
+function setImage() {
+    var imageName = window.location.hash.substring(1);
+    imageName = imageName.replace('<', '').replace('/', '').replace(':', '');//prevent xss?
+    document.getElementById('image').src = "http://lolcats.iskrembilen.com/imgs/" + imageName;
+}
+
+function getNew() {
+    var hasImage;
+    if (document.getElementById("image").src == "http://lolcats.iskrembilen.com/") {
+        hasImage = false;
+    } else {
+        hasImage = true;
+    }
+
+    var request = window.XMLHttpRequest ? new XMLHttpRequest() : new new ActiveXObject("MSXML2.XMLHTTP.3.0");
+
+    request.open("get", "http://lolcats.iskrembilen.com/ajax.php", true);
+    request.onreadystatechange = function(){
+        if (request.readyState == 4 && request.status == 200) {
+            if (request.responseText){
+                document.getElementById("newLink").href = "http://lolcats.iskrembilen.com/#" + request.responseText;
+            }
+        }
+    }
+    request.send(null);
+}
+
+function load() {
+    if (window.location.hash == "") {
+        var request = window.XMLHttpRequest ? new XMLHttpRequest() : new new ActiveXObject("MSXML2.XMLHTTP.3.0");
+    
+        request.open("get", "http://lolcats.iskrembilen.com/ajax.php", true);
+        request.onreadystatechange = function() {
+            if (request.readyState == 4 && request.status == 200) {
+                if (request.responseText) {
+                    document.getElementById("image").src = "http://lolcats.iskrembilen.com/imgs/" + request.responseText;
+                    window.location.hash = "#" + request.responseText;
+                }
+            }
+        }
+        request.send(null);
+        getNew();
+    } else {
+        setImage();
+        getNew();
+    }
+    document.getElementById("page").style.display = 'block';
+}
+
+function clicked() {
+    document.getElementById("image").src = "http://lolcats.iskrembilen.com/wait.gif";
+    window.location = document.getElementById("newLink").href;
+    setImage();
+    getNew();
+}
+
+function keyPress(e) {
+    if (e.which == 110) {
+        clicked();
+    }
+}
+document.onkeypress = keyPress;
+
+</script>
+</head>
+<body onload="javascript:load()" onhashchange="javscript:setImage()">
+<noscript>
+    <h1><span class='warning'>PLZ 2 ENABLE JAVASCRIPT</span></h1>
+    <p class='warning'><a href='old.php'>... or click here for the old stupid version.</a></p>
+</noscript>
+
+<div id='page' style="display:none">
+    <h1>Random lolcat</h1>
+    <a href='#' id='newLink' onclick="javascript:clicked();">
+    <img src='wait.gif' alt='lolcat' id='image' />
+    </a>
+
+    <p id="infobox">Click the image or press '<b>n</b>' for a new, random one.</p>
+</div>
+
+<p id="footer"> page &copy; 2011 <a href="http://mts.ms/">sandsmark</a>//<a href="http://validator.w3.org/check?uri=http%3A%2F%2Flolcats.iskrembilen.com%2F">valid html5</a>
+</p>
+<a href="http://wiki.nginx.org/"><img src="nginx-inside.png" id='ngingxlogo' alt='powered by ngingx' /></a>
+</body>
+</html>
